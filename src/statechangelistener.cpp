@@ -85,12 +85,17 @@ void StateChangeListener::parseData(QLocalSocket *socket, const QByteArray &data
         if (args.first() == "leave")
             action = ActionLeave;
 
-        State::ID state = stateFromString(args.last());
-        if (state == State::Invalid)
+        State::ID id = stateFromString(args.last());
+        if (id == State::Invalid)
             return;
         if (action == ActionInvalid)
             return;
 
-        emit stateChanged(action, new State(state, socket, this));
+        State *state = new State(id, socket, this);
+
+        emit stateChanged(action, state);
+
+        if (QObject::receivers(SIGNAL(stateChanged(Action, State*))) == 0)
+            state->done();
     }
 }
