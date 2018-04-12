@@ -1,0 +1,30 @@
+<html>
+<head>
+  <script type="text/javascript" src="qrc:///qtwebchannel/qwebchannel.js"></script>
+  <script>
+  window.onload = function() {
+    new QWebChannel(qt.webChannelTransport, function(channel) {
+      channel.objects.Agent.info(function(info) {
+        document.getElementById("info").innerHTML = JSON.stringify(info, null, 2);
+      });
+
+      channel.objects.StateChangeListener.stateChanged.connect(function(action, state) {
+        document.getElementById("action").innerHTML = action;
+        document.getElementById("state").innerHTML = state.Id;
+        state.done();
+      });
+    });
+  }
+  </script>
+</head>
+<body>
+  <h1>Example</h1>
+
+  <b>Info</b>
+  <pre id="info">
+  </pre>
+
+  <p><b>Action:</b> <span id="action"></span></p>
+  <p><b>State:</b> <span id="state"></span></p>
+</body>
+</html>

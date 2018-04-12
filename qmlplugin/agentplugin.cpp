@@ -15,6 +15,10 @@
 void AgentPlugin::registerTypes(const char *uri)
 {
     Q_ASSERT(uri == QLatin1String("Agent"));
+
+    qRegisterMetaType<StateChangeListener::Action>("Action");
+    qRegisterMetaType<State::ID>("StateID");
+
     qmlRegisterType<Agent>(uri, 1, 0, "Agent");
     qmlRegisterType<StateChangeListener>(uri, 1, 0, "StateChangeListener");
     qmlRegisterType<State>(uri, 1, 0, "AgentState");
