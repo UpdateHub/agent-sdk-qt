@@ -35,6 +35,7 @@ public slots:
 
 signals:
     void stateChanged(Action action, State *state);
+    void errorOccurred(const QString &error);
 
 private:
     void parseData(QLocalSocket *socket, const QByteArray &data);

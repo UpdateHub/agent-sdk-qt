@@ -76,6 +76,12 @@ void StateChangeListener::parseData(QLocalSocket *socket, const QByteArray &data
 
         QStringList args = line.split(' ');
 
+        if (args.first() == "error" && args.size() > 1) {
+            emit errorOccurred(args.mid(1, -1).join(" "));
+            socket->close();
+            return;
+        }
+
         if (args.size() < 2)
             return;
 
