@@ -11,3 +11,4 @@ See [docs/README.md](docs/README.md) for some basic documentation of provided cl
 
 * [Qt](examples/qt)
 * [QML](examples/qml)
+* [WebEngine](examples/webengine)
