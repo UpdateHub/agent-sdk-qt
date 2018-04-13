@@ -82,8 +82,11 @@ void StateChangeListener::parseData(QLocalSocket *socket, const QByteArray &data
             return;
         }
 
-        if (args.size() < 2)
+        // invalid arguments
+        if (args.size() < 2) {
+            socket->close();
             return;
+        }
 
         Action action = ActionInvalid;
         if (args.first() == "enter")
