@@ -41,7 +41,7 @@ StateChangeListener::StateChangeListener(QObject *parent) : QObject(parent)
 {
     m_server = new QLocalServer;
 
-    if (!QFile::exists("/usr/share/updatehub/state-change-callbacks.d/10-updatehub-sdk-integration")) {
+    if (!QFile::exists("/usr/share/updatehub/state-change-callbacks.d/10-updatehub-sdk-statechange-trigger")) {
         qFatal("updatehub-sdk-statechange-trigger not found!");
     }
 }
