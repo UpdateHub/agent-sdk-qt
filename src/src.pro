@@ -16,9 +16,9 @@ HEADERS += \
     state.hpp \
     agent.hpp
 
-target.path = $$PREFIX/lib
+target.path = $$PREFIX/usr/lib
 
-headers.path = $$PREFIX/include/updatehubagent
+headers.path = $$PREFIX/usr/include/updatehubagent
 headers.files = statechangelistener.hpp state.hpp agent.hpp
 
 QMAKE_PKGCONFIG_NAME = updatehubagent
