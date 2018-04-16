@@ -16,6 +16,8 @@ HEADERS += \
     state.hpp \
     agent.hpp
 
+isEmpty(PREFIX):PREFIX = /usr/local
+
 target.path = $$PREFIX/lib
 
 headers.path = $$PREFIX/include/updatehubagent
