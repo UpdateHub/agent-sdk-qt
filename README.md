@@ -12,3 +12,17 @@ See [docs/README.md](docs/README.md) for some basic documentation of provided cl
 * [Qt](examples/qt)
 * [QML](examples/qml)
 * [WebEngine](examples/webengine)
+
+### Building
+
+```
+qmake
+make
+make install
+```
+
+You can change install prefix by setting PREFIX variable:
+
+```
+qmake PREFIX=/usr
+```
