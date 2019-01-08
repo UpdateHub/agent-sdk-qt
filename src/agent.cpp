@@ -18,9 +18,9 @@ Agent::Agent(QObject *parent): QObject(parent)
 {
 }
 
-QVariantMap Agent::probe(const QString &serverAddress)
+QVariantMap Agent::probe(const QString &serverAddress, bool ignoreProbeASAP)
 {
-    return doProbe(serverAddress);
+    return doProbe(serverAddress, ignoreProbeASAP);
 }
 
 QVariantMap Agent::info()
@@ -65,7 +65,7 @@ QVariantMap Agent::logs()
     return document.toVariant().toMap();
 }
 
-QVariantMap Agent::doProbe(const QString &serverAddress)
+QVariantMap Agent::doProbe(const QString &serverAddress, bool ignoreProbeASAP)
 {
     QNetworkAccessManager http;
     QNetworkRequest req(QUrl("http://localhost:8080/probe"));
@@ -73,6 +73,7 @@ QVariantMap Agent::doProbe(const QString &serverAddress)
 
     QJsonObject json;
     json.insert("server-address", serverAddress);
+    json.insert("ignore-probe-asap", ignoreProbeASAP);
 
     QNetworkReply *reply = http.post(req, QJsonDocument(json).toJson());
 

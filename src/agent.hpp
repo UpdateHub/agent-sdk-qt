@@ -20,12 +20,12 @@ public:
     Agent(QObject *parent = NULL);
 
 public slots:
-    QVariantMap probe(const QString &serverAddress = "");
+    QVariantMap probe(const QString &serverAddress, bool ignoreProbeASAP = false);
     QVariantMap info();
     QVariantMap logs();
 
 private:
-    QVariantMap doProbe(const QString &serverAddress);
+    QVariantMap doProbe(const QString &serverAddress, bool ignoreProbeASAP);
 };
 
 #endif // AGENT_HPP
