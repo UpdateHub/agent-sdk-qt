@@ -2,7 +2,7 @@
 
 ### Methods
 
-#### ```probe(const QString &serverAddress = "")```
+#### ```probe(const QString &serverAddress, bool ignoreProbeASAP = false)```
 
 Probe updatehub agent for update
 
