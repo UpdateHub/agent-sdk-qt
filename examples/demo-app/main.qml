@@ -143,7 +143,7 @@ Image {
             onClicked: {
                 currentState = "Checking";
 
-                var probe = updatehub.probe();
+                var probe = updatehub.probe("");
 
                 if (typeof probe != "undefined") {
                     if (!probe["update-available"]) {
