@@ -112,8 +112,6 @@ Image {
                     text: {
                         return "<i>Version: " + version + "</i>";
                     }
-
-                    font.pointSize: 12
                 }
             }
         }
