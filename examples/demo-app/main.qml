@@ -120,7 +120,7 @@ Image {
     }
 
     Rectangle {
-        width: 180
+        width: label.width + 40
         height: 40
         color: "#5CA7DF"
         radius: 8
@@ -130,7 +130,9 @@ Image {
         opacity: currentState === "" ? 1 : 0.2
         enabled: currentState === ""
 
+
         Text {
+            id: label
             text: "CHECK FOR UPDATES"
             color: "#ffffff"
             font.bold: true
