@@ -1,5 +1,5 @@
 import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick.Controls 1.4
 import QtGraphicalEffects 1.0
 import QtQuick.Layouts 1.11
 import updatehub.Agent 1.0 as UpdateHub
