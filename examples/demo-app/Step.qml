@@ -42,7 +42,7 @@ Item {
     }
 
     Column {
-        spacing: 15
+        spacing: 20
         anchors.left: parent.left
         anchors.right: parent.right
 
@@ -75,16 +75,16 @@ Item {
             }
 
             Rectangle {
-                width: 30
-                height: 30
+                width: 40
+                height: 40
                 radius: width / 2
                 border.color: stepColor()
                 border.width: 8
                 anchors.centerIn: parent
 
                 BusyIndicator {
-                    width: 20
-                    height: 20
+                    width: 30
+                    height: 30
                     anchors.centerIn: parent
                     visible: indicator.step === title
                 }

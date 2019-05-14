@@ -73,7 +73,7 @@ Image {
         id: frame
         color: "#fff"
         radius: 10
-        width: 640
+        width: 720
         height: 480
         anchors.centerIn: parent
 
@@ -106,7 +106,7 @@ Image {
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 Item {
-                    width: 600
+                    width: frame.width - 40
                     anchors.horizontalCenter: parent.horizontalCenter
 
                     StepIndicator {
