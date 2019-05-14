@@ -18,15 +18,17 @@ Image {
         Component.onCompleted: listen()
 
         onStateChanged: {
-            switch (state.id()) {
-            case UpdateHub.AgentState.Downloading:
-                currentState = "Downloading";
-                break;
-            case UpdateHub.AgentState.Installing:
-                currentState = "Installing";
-                break;
-            case UpdateHub.AgentState.Rebooting:
-                currentState = "Rebooting";
+            if (action === UpdateHub.StateChangeListener.ActionEnter) {
+                switch (state.id()) {
+                case UpdateHub.AgentState.Downloading:
+                    currentState = "Downloading";
+                    break;
+                case UpdateHub.AgentState.Installing:
+                    currentState = "Installing";
+                    break;
+                case UpdateHub.AgentState.Rebooting:
+                    currentState = "Rebooting";
+                }
             }
 
             state.done();
