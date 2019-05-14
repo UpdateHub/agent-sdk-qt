@@ -28,11 +28,25 @@ Image {
                     break;
                 case UpdateHub.AgentState.Rebooting:
                     currentState = "Rebooting";
+
+                    rebootTimer.state = state;
+                    rebootTimer.start();
+                    return
                 }
             }
 
             state.done();
         }
+    }
+
+    Timer {
+        id: rebootTimer
+
+        property var state: null
+
+        interval: 5 * 1000
+        repeat: false
+        onTriggered: state.done()
     }
 
     Timer {
