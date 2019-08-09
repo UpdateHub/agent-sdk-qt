@@ -26,7 +26,7 @@ QVariantMap Agent::probe(const QString &serverAddress, bool ignoreProbeASAP)
 QVariantMap Agent::info()
 {
     QNetworkAccessManager http;
-    QNetworkRequest req(QUrl("http://localhost:8080/info"));
+    QNetworkRequest req(QUrl(QString("http://%1:%2/info").arg(m_defaultHost.host()).arg(m_defaultHost.port())));
 
     QNetworkReply *reply = http.get(req);
 
@@ -47,7 +47,7 @@ QVariantMap Agent::info()
 QVariantMap Agent::logs()
 {
     QNetworkAccessManager http;
-    QNetworkRequest req(QUrl("http://localhost:8080/log"));
+    QNetworkRequest req(QUrl(QString("http://%1:%2/log").arg(m_defaultHost.host()).arg(m_defaultHost.port())));
 
     QNetworkReply *reply = http.get(req);
 
@@ -68,7 +68,7 @@ QVariantMap Agent::logs()
 QVariantMap Agent::doProbe(const QString &serverAddress, bool ignoreProbeASAP)
 {
     QNetworkAccessManager http;
-    QNetworkRequest req(QUrl("http://localhost:8080/probe"));
+    QNetworkRequest req(QUrl(QString("http://%1:%2/probe").arg(m_defaultHost.host()).arg(m_defaultHost.port())));
     req.setRawHeader("Content-Type", "application/json");
 
     QJsonObject json;
