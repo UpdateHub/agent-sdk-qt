@@ -14,12 +14,14 @@
 *.so
 *.so.*
 *.prl
+src/pkgconfig
 
 # Executables
 
 *.exe
 *.out
 *.app
+*example
 
 # Qt-es
 

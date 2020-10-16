@@ -4,7 +4,7 @@ CONFIG += qt
 
 QT = qml
 
-TARGET = agentplugin
+TARGET = updatehubsdk-plugin
 
 SOURCES += \
     agentplugin.cpp
@@ -12,12 +12,14 @@ SOURCES += \
 HEADERS += \
     agentplugin.hpp
 
-LIBS += -L../src -lupdatehubagent
+isEmpty(PREFIX):PREFIX = $$[QT_INSTALL_QML]/updatehub/Agent
+
+LIBS += -L$$PREFIX/../src -lupdatehub-agent
 INCLUDEPATH += $$PWD/../src
 
-target.path = $$[QT_INSTALL_QML]/updatehub/Agent
+target.path = $$PREFIX
 
 pluginfiles.files += $$PWD/qmldir
-pluginfiles.path = $$[QT_INSTALL_QML]/updatehub/Agent
+pluginfiles.path = $$PREFIX/qmlplugin
 
 INSTALLS += target pluginfiles

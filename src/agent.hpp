@@ -1,6 +1,6 @@
 /*
  * updatehub
- * Copyright (C) 2018
+ * Copyright (C) 2018-2020
  * O.S. Systems Sofware LTDA: contato@ossystems.com.br
  *
  * SPDX-License-Identifier:     MIT
@@ -9,24 +9,31 @@
 #ifndef AGENT_HPP
 #define AGENT_HPP
 
+#include <QEventLoop>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 #include <QObject>
 #include <QUrl>
-#include <QVariantMap>
 
 class Agent : public QObject {
   Q_OBJECT public : Agent(QObject *parent = NULL);
 
-  inline void setDefaultHost(const QUrl &host) { m_defaultHost = host; };
+  inline void setDefaultHost(const QUrl &host) { this->m_defaultHost = host; };
 
 public slots:
-  QVariantMap probe(const QString &serverAddress, bool ignoreProbeASAP = false);
-  QVariantMap info();
-  QVariantMap logs();
+  QByteArray info();
+  QByteArray log();
+  QByteArray abortDownload();
+  QByteArray localInstall(const QString &file);
+  QByteArray remoteInstall(const QString &url);
+  QByteArray probe(const QString &serverAddress);
 
 private:
-  QUrl m_defaultHost = QUrl("tcp://localhost:8080");
+  QUrl m_defaultHost = QUrl("http://localhost:8080");
 
-  QVariantMap doProbe(const QString &serverAddress, bool ignoreProbeASAP);
+  QByteArray processRequest(const QString &route, QJsonObject json);
 };
 
 #endif // AGENT_HPP

@@ -2,7 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 1.4
 import QtGraphicalEffects 1.0
 import QtQuick.Layouts 1.11
-import updatehub.Agent 1.0 as UpdateHub
+import updatehub.Agent 2.0 as UpdateHub
 
 Image {
     source: "bg.jpg"
@@ -14,25 +14,23 @@ Image {
         id: updatehub
     }
 
-    UpdateHub.StateChangeListener {
+    UpdateHub.StateChange {
         Component.onCompleted: listen()
 
-        onStateChanged: {
-            if (action === UpdateHub.StateChangeListener.ActionEnter) {
-                switch (state.id()) {
-                case UpdateHub.AgentState.Downloading:
-                    currentState = "Downloading";
+        onState: {
+            switch (state.id()) {
+                case UpdateHub.State.Download:
+                    currentState = "Download";
                     break;
-                case UpdateHub.AgentState.Installing:
-                    currentState = "Installing";
+                case UpdateHub.State.Install:
+                    currentState = "Install";
                     break;
-                case UpdateHub.AgentState.Rebooting:
-                    currentState = "Rebooting";
+                case UpdateHub.State.Reboot:
+                    currentState = "Reboot";
 
                     rebootTimer.state = state;
                     rebootTimer.start();
                     return
-                }
             }
 
             state.done();

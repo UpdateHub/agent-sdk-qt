@@ -2,6 +2,8 @@ TARGET = example
 
 CONFIG += link_pkgconfig
 
-PKGCONFIG = updatehubagent
+QT += qml network
+
+PKGCONFIG = updatehub-agent
 
 SOURCES = main.cpp
