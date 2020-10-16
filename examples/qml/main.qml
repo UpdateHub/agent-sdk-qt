@@ -1,16 +1,16 @@
 import QtQuick 2.0
-import updatehub.Agent 1.0
+import updatehub.Agent 2.0
 
 Item {
-    StateChangeListener {
+    StateChange {
         Component.onCompleted: listen()
 
-        onStateChanged: {
-            if (action == StateChangeListener.ActionEnter && state.id() == AgentState.Downloading) {
+        onState: {
+            if (State->id == AgentState.Download) {
                console.log("enter downloading state");
             }
 
-            state.cancel();
+            handler.cancel();
         }
     }
 }

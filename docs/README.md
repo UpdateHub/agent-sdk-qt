@@ -2,44 +2,50 @@
 
 ### Methods
 
-#### ```probe(const QString &serverAddress, bool ignoreProbeASAP = false)```
+#### ```probe(const QString &serverAddress)```
 
-Probe updatehub agent for update
+Probe the agent for update.
 
-#### ```getInfo()```
+#### ```info()```
 
-Get updatehub agent general information
+Get the current state of the agent.
 
-#### ```getLogs()```
+#### ```log()```
 
-Get updatehub agent log entries
+Get the available log entries for the last update cycle.
 
-## class ```StateChangeListener```
+#### ```localInstall(const QString &file)```
+
+Request agent to install a local update package.
+
+#### ```remoteInstall(const QString &url)```
+
+Request agent to install a package from a URL.
+
+#### ```abortDownload()```
+
+Tells agent to abort the current download.
+
+## class ```StateChange```
 
 ### Methods
 
 #### ```listen()```
 
-Listen for state changes of updatehub agent
+Listen for state changes of updatehub agent.
 
-### Signals
+### ```onState(State::ID, callback)```
 
-#### ```stateChanged(Action action, State *state)```
+Register the callbacks for a state.
 
-This signal is emitted when the state has been changed
-
-### class ```State```
+### class ```Handler```
 
 ### Methods
 
-#### ```id()```
-
-Get state id
-
-#### ```tryAgain(int n)```
-
-Try again state in *n* seconds
-
 #### ```cancel()```
 
-Cancel state
+Cancel the current action on the agent.
+
+#### ```proceed()```
+
+Tell the agent to proceed with the transition.

@@ -1,6 +1,6 @@
 /*
  * updatehub
- * Copyright (C) 2018
+ * Copyright (C) 2018-2020
  * O.S. Systems Sofware LTDA: contato@ossystems.com.br
  *
  * SPDX-License-Identifier:     MIT
@@ -8,74 +8,55 @@
 
 #include "agent.hpp"
 
-#include <QEventLoop>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QNetworkReply>
-#include <QNetworkRequest>
-
 Agent::Agent(QObject *parent) : QObject(parent) {}
 
-QVariantMap Agent::probe(const QString &serverAddress, bool ignoreProbeASAP) {
-  return doProbe(serverAddress, ignoreProbeASAP);
+QByteArray Agent::info() {
+  return this->processRequest(QString("info"), QJsonObject());
 }
 
-QVariantMap Agent::info() {
-  QNetworkAccessManager http;
-  QNetworkRequest req(QUrl(QString("http://%1:%2/info")
-                               .arg(m_defaultHost.host())
-                               .arg(m_defaultHost.port())));
-
-  QNetworkReply *reply = http.get(req);
-
-  QEventLoop loop;
-  connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
-  loop.exec();
-
-  if (reply->error() != QNetworkReply::NoError) {
-    qWarning() << reply->errorString();
-    return QVariantMap();
-  }
-
-  QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-
-  return document.toVariant().toMap();
+QByteArray Agent::log() {
+  return this->processRequest(QString("log"), QJsonObject());
 }
 
-QVariantMap Agent::logs() {
-  QNetworkAccessManager http;
-  QNetworkRequest req(QUrl(QString("http://%1:%2/log")
-                               .arg(m_defaultHost.host())
-                               .arg(m_defaultHost.port())));
-
-  QNetworkReply *reply = http.get(req);
-
-  QEventLoop loop;
-  connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
-  loop.exec();
-
-  if (reply->error() != QNetworkReply::NoError) {
-    qWarning() << reply->errorString();
-    return QVariantMap();
-  }
-
-  QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-
-  return document.toVariant().toMap();
-}
-
-QVariantMap Agent::doProbe(const QString &serverAddress, bool ignoreProbeASAP) {
-  QNetworkAccessManager http;
-  QNetworkRequest req(QUrl(QString("http://%1:%2/probe")
-                               .arg(m_defaultHost.host())
-                               .arg(m_defaultHost.port())));
-  req.setRawHeader("Content-Type", "application/json");
-
+QByteArray Agent::probe(const QString &serverAddress) {
   QJsonObject json;
-  json.insert("server-address", serverAddress);
-  json.insert("ignore-probe-asap", ignoreProbeASAP);
+  json.insert("custom_server", serverAddress);
 
-  QNetworkReply *reply = http.post(req, QJsonDocument(json).toJson());
+  return this->processRequest(QString("probe"), json);
+}
+
+QByteArray Agent::localInstall(const QString &file) {
+  QJsonObject json;
+  json.insert("file", file);
+
+  return this->processRequest(QString("local_install"), json);
+}
+
+QByteArray Agent::remoteInstall(const QString &url) {
+  QJsonObject json;
+  json.insert("url", url);
+
+  return this->processRequest(QString("remote_install"), json);
+}
+
+QByteArray Agent::abortDownload() {
+  return this->processRequest(QString("update/download/abort"), QJsonObject());
+}
+
+QByteArray Agent::processRequest(const QString &route, QJsonObject json) {
+  QNetworkAccessManager http;
+  QNetworkReply *reply;
+  QNetworkRequest req(QUrl(QString("http://%1:%2/%3")
+                               .arg(this->m_defaultHost.host())
+                               .arg(this->m_defaultHost.port())
+                               .arg(route)));
+
+  if (json.isEmpty()) {
+    reply = http.get(req);
+  } else {
+    req.setRawHeader("Content-Type", "application/json");
+    reply = http.post(req, QJsonDocument(json).toJson());
+  }
 
   QEventLoop loop;
   connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
@@ -83,10 +64,8 @@ QVariantMap Agent::doProbe(const QString &serverAddress, bool ignoreProbeASAP) {
 
   if (reply->error() != QNetworkReply::NoError) {
     qWarning() << reply->errorString();
-    return QVariantMap();
+    return QByteArray();
   }
 
-  QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-
-  return document.toVariant().toMap();
+  return reply->readAll();
 }

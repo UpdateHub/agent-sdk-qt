@@ -1,6 +1,6 @@
 /*
  * updatehub
- * Copyright (C) 2018
+ * Copyright (C) 2018-2020
  * O.S. Systems Sofware LTDA: contato@ossystems.com.br
  *
  * SPDX-License-Identifier:     MIT
