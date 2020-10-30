@@ -15,33 +15,24 @@ class QLocalServer;
 class QLocalSocket;
 class State;
 
-class StateChangeListener: public QObject
-{
-    Q_OBJECT
+class StateChangeListener : public QObject {
+  Q_OBJECT public : StateChangeListener(QObject *parent = NULL);
 
-public:
-    StateChangeListener(QObject *parent = NULL);
+  enum Action { ActionInvalid = 0, ActionEnter, ActionLeave };
 
-    enum Action {
-        ActionInvalid = 0,
-        ActionEnter,
-        ActionLeave
-    };
-
-    Q_ENUM(Action)
-
+  Q_ENUM(Action)
 public slots:
-    void listen();
+  void listen();
 
 signals:
-    void stateChanged(Action action, State *state);
-    void errorOccurred(const QString &error);
+  void stateChanged(Action action, State *state);
+  void errorOccurred(const QString &error);
 
 private:
-    void parseData(QLocalSocket *socket, const QByteArray &data);
+  void parseData(QLocalSocket *socket, const QByteArray &data);
 
 private:
-    QLocalServer *m_server;
+  QLocalServer *m_server;
 };
 
 #endif // STATECHANGELISTENER_HPP

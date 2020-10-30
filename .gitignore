@@ -9,6 +9,17 @@
 *.so
 *.dll
 *.dylib
+*.cpp~
+*.hpp~
+*.so
+*.so.*
+*.prl
+
+# Executables
+
+*.exe
+*.out
+*.app
 
 # Qt-es
 
