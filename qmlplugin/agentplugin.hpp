@@ -9,16 +9,15 @@
 #ifndef AGENTPLUGIN_HPP
 #define AGENTPLUGIN_HPP
 
-#include <QQmlExtensionPlugin>
 #include <QQmlEngine>
+#include <QQmlExtensionPlugin>
 
-class AgentPlugin : public QQmlExtensionPlugin
-{
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID QQmlExtensionInterface_iid)
+class AgentPlugin : public QQmlExtensionPlugin {
+  Q_OBJECT
+  Q_PLUGIN_METADATA(IID QQmlExtensionInterface_iid)
 
 public:
-    void registerTypes(const char *uri);
+  void registerTypes(const char *uri);
 };
 
 #endif // AGENTPLUGIN_HPP

@@ -8,85 +8,85 @@
 
 #include "agent.hpp"
 
-#include <QNetworkRequest>
-#include <QNetworkReply>
 #include <QEventLoop>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 
-Agent::Agent(QObject *parent): QObject(parent)
-{
+Agent::Agent(QObject *parent) : QObject(parent) {}
+
+QVariantMap Agent::probe(const QString &serverAddress, bool ignoreProbeASAP) {
+  return doProbe(serverAddress, ignoreProbeASAP);
 }
 
-QVariantMap Agent::probe(const QString &serverAddress, bool ignoreProbeASAP)
-{
-    return doProbe(serverAddress, ignoreProbeASAP);
+QVariantMap Agent::info() {
+  QNetworkAccessManager http;
+  QNetworkRequest req(QUrl(QString("http://%1:%2/info")
+                               .arg(m_defaultHost.host())
+                               .arg(m_defaultHost.port())));
+
+  QNetworkReply *reply = http.get(req);
+
+  QEventLoop loop;
+  connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+  loop.exec();
+
+  if (reply->error() != QNetworkReply::NoError) {
+    qWarning() << reply->errorString();
+    return QVariantMap();
+  }
+
+  QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+
+  return document.toVariant().toMap();
 }
 
-QVariantMap Agent::info()
-{
-    QNetworkAccessManager http;
-    QNetworkRequest req(QUrl(QString("http://%1:%2/info").arg(m_defaultHost.host()).arg(m_defaultHost.port())));
+QVariantMap Agent::logs() {
+  QNetworkAccessManager http;
+  QNetworkRequest req(QUrl(QString("http://%1:%2/log")
+                               .arg(m_defaultHost.host())
+                               .arg(m_defaultHost.port())));
 
-    QNetworkReply *reply = http.get(req);
+  QNetworkReply *reply = http.get(req);
 
-    QEventLoop loop;
-    connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
-    loop.exec();
+  QEventLoop loop;
+  connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+  loop.exec();
 
-    if (reply->error() != QNetworkReply::NoError) {
-        qWarning() << reply->errorString();
-        return QVariantMap();
-    }
+  if (reply->error() != QNetworkReply::NoError) {
+    qWarning() << reply->errorString();
+    return QVariantMap();
+  }
 
-    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+  QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-    return document.toVariant().toMap();
+  return document.toVariant().toMap();
 }
 
-QVariantMap Agent::logs()
-{
-    QNetworkAccessManager http;
-    QNetworkRequest req(QUrl(QString("http://%1:%2/log").arg(m_defaultHost.host()).arg(m_defaultHost.port())));
+QVariantMap Agent::doProbe(const QString &serverAddress, bool ignoreProbeASAP) {
+  QNetworkAccessManager http;
+  QNetworkRequest req(QUrl(QString("http://%1:%2/probe")
+                               .arg(m_defaultHost.host())
+                               .arg(m_defaultHost.port())));
+  req.setRawHeader("Content-Type", "application/json");
 
-    QNetworkReply *reply = http.get(req);
+  QJsonObject json;
+  json.insert("server-address", serverAddress);
+  json.insert("ignore-probe-asap", ignoreProbeASAP);
 
-    QEventLoop loop;
-    connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
-    loop.exec();
+  QNetworkReply *reply = http.post(req, QJsonDocument(json).toJson());
 
-    if (reply->error() != QNetworkReply::NoError) {
-        qWarning() << reply->errorString();
-        return QVariantMap();
-    }
+  QEventLoop loop;
+  connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+  loop.exec();
 
-    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+  if (reply->error() != QNetworkReply::NoError) {
+    qWarning() << reply->errorString();
+    return QVariantMap();
+  }
 
-    return document.toVariant().toMap();
-}
+  QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
 
-QVariantMap Agent::doProbe(const QString &serverAddress, bool ignoreProbeASAP)
-{
-    QNetworkAccessManager http;
-    QNetworkRequest req(QUrl(QString("http://%1:%2/probe").arg(m_defaultHost.host()).arg(m_defaultHost.port())));
-    req.setRawHeader("Content-Type", "application/json");
-
-    QJsonObject json;
-    json.insert("server-address", serverAddress);
-    json.insert("ignore-probe-asap", ignoreProbeASAP);
-
-    QNetworkReply *reply = http.post(req, QJsonDocument(json).toJson());
-
-    QEventLoop loop;
-    connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
-    loop.exec();
-
-    if (reply->error() != QNetworkReply::NoError) {
-        qWarning() << reply->errorString();
-        return QVariantMap();
-    }
-
-    QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
-
-    return document.toVariant().toMap();
+  return document.toVariant().toMap();
 }

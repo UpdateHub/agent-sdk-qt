@@ -10,27 +10,23 @@
 #define AGENT_HPP
 
 #include <QObject>
-#include <QVariantMap>
 #include <QUrl>
+#include <QVariantMap>
 
-class Agent: public QObject
-{
-    Q_OBJECT
+class Agent : public QObject {
+  Q_OBJECT public : Agent(QObject *parent = NULL);
 
-public:
-    Agent(QObject *parent = NULL);
-
-    inline void setDefaultHost(const QUrl &host) { m_defaultHost = host; };
+  inline void setDefaultHost(const QUrl &host) { m_defaultHost = host; };
 
 public slots:
-    QVariantMap probe(const QString &serverAddress, bool ignoreProbeASAP = false);
-    QVariantMap info();
-    QVariantMap logs();
+  QVariantMap probe(const QString &serverAddress, bool ignoreProbeASAP = false);
+  QVariantMap info();
+  QVariantMap logs();
 
 private:
-    QUrl m_defaultHost = QUrl("tcp://localhost:8080");
+  QUrl m_defaultHost = QUrl("tcp://localhost:8080");
 
-    QVariantMap doProbe(const QString &serverAddress, bool ignoreProbeASAP);
+  QVariantMap doProbe(const QString &serverAddress, bool ignoreProbeASAP);
 };
 
 #endif // AGENT_HPP
