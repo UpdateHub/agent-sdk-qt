@@ -1,0 +1,93 @@
+name: CI - Linux
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  test:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        version: ['5.12.0']
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          modules: 'qtwebengine'
+          version: ${{ matrix.version }}
+          tools: 'tools_ifw,4.0,qt.tools.ifw.40'
+          dir: '${{ github.workspace }}'
+          
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update; sudo apt-get install socat
+
+      - name: Build sdk lib
+        run: |
+          mkdir build
+          qmake PREFIX=$PWD/build
+          make
+          make install
+
+      - name: Build example API
+        run: |
+          cd examples/qt/api
+          export PKG_CONFIG_PATH=$PWD/../../../build/lib/pkgconfig
+          qmake
+          make
+
+      - name: Build example Listener
+        run: |
+          cd examples/qt/listener
+          export PKG_CONFIG_PATH=$PWD/../../../build/lib/pkgconfig
+          qmake
+          make
+
+      - name: Run API test
+        run: |
+          wget https://raw.githubusercontent.com/UpdateHub/updatehub/master/doc/agent-http.yaml \
+           -O agent-http.yaml
+
+          docker run \
+            --rm \
+            --detach=true \
+            --name agent-sdk-go-mock \
+            -p 8080:8000 \
+            -v $PWD/agent-http.yaml:/api.yaml \
+            danielgtaylor/apisprout@sha256:6c07143937e57095d8478efc8ab7eab52b44e67c7673285f8c0a2bf4a7b137ad \
+            /api.yaml --validate-request
+
+          LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/build/lib ./examples/qt/api/example
+
+      - name: Run listener test
+        run: |
+          export UH_LISTENER_TEST=updatehub-statechange.sock
+          LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/build/lib ./examples/qt/listener/example &
+         
+          while [ ! -S "$UH_LISTENER_TEST" ]; do
+            sleep 1
+          done
+
+          if [[ "$(echo "download" | socat - UNIX-CONNECT:updatehub-statechange.sock)" != "cancel" ]]; then
+            echo "Unexpected download response"
+            exit 1
+          fi
+          if [[ "$(echo "install" | socat - UNIX-CONNECT:updatehub-statechange.sock)" != "" ]]; then
+            echo "Unexpected install response"
+            exit 2
+          fi
+          if [[ "$(echo "error" | socat - UNIX-CONNECT:updatehub-statechange.sock)" != "" ]]; then
+            echo "Unexpected error response"
+            exit 3
+          fi
+          if [[ "$(echo "reboot" | socat - UNIX-CONNECT:updatehub-statechange.sock)" != "" ]]; then
+            echo "Unexpected reboot response"
+            exit 4
+          fi
