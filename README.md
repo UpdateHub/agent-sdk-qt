@@ -26,3 +26,9 @@ You can change install prefix by setting PREFIX variable:
 ```
 qmake PREFIX=/usr
 ```
+
+You can set to install the QML plugin by setting PLUGIN variable:
+
+```
+qmake PLUGIN=QML
+```
