@@ -14,27 +14,11 @@ int main(int argc, char *argv[]) {
 
   Agent agent;
 
-  QByteArray info = agent.info();
-
-  qInfo() << qPrintable(info) << "\n\n";
-
-  QByteArray log = agent.log();
-
-  qInfo() << qPrintable(log) << "\n\n";
-
-  QByteArray probe = agent.probe("");
-
-  qInfo() << qPrintable(probe) << "\n\n";
-
-  QByteArray probeCustom = agent.probe("http://www.example.com:8080");
-
-  qInfo() << qPrintable(probeCustom) << "\n\n";
-
-  QByteArray localInstall = agent.localInstall("/tmp/update.uhu");
-
-  qInfo() << qPrintable(localInstall) << "\n\n";
-
-  QByteArray remoteInstall = agent.remoteInstall("http://www.example.com:8080");
-
-  qInfo() << qPrintable(remoteInstall) << "\n\n";
+  qInfo() << qPrintable(agent.info()) << "\n\n";
+  qInfo() << qPrintable(agent.log()) << "\n\n";
+  qInfo() << qPrintable(agent.probe("")) << "\n\n";
+  qInfo() << qPrintable(agent.probe("http://www.example.com:8080")) << "\n\n";
+  qInfo() << qPrintable(agent.localInstall("/tmp/update.uhu")) << "\n\n";
+  qInfo() << qPrintable(agent.remoteInstall("http://www.example.com:8080"))
+          << "\n\n";
 }
