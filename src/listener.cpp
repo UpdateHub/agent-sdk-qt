@@ -59,23 +59,16 @@ void StateChange::emitCallback(QLocalSocket *socket, const QString &input) {
 }
 
 void StateChange::checkSocket() {
-  QString socket;
-  QString abs_dir = QDir::currentPath() + "/";
+  QString socket = SOCKET_PATH;
 
   auto env_p = qgetenv("UH_LISTENER_TEST");
-  auto str_env_p(env_p);
-
-  if (!str_env_p.isEmpty()) {
+  if (!env_p.isEmpty()) {
     socket = env_p;
-  } else {
-    socket = SOCKET_PATH;
   }
 
-  abs_dir.append(socket);
-
-  if (QFile::exists(abs_dir))
-    QLocalServer::removeServer(abs_dir);
+  if (QFile::exists(socket))
+    QLocalServer::removeServer(socket);
 
   this->m_server->close();
-  this->m_server->listen(abs_dir);
+  this->m_server->listen(socket);
 }
