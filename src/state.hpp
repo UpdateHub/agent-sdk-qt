@@ -11,7 +11,7 @@
 
 class State {
 public:
-  enum ID { Invalid, Probe, Download, Install, Reboot, Error };
+  enum ID { Invalid, Probe, Download, PrepareLocalInstall, Install, Reboot, Error };
   ID id;
 };
 
@@ -20,6 +20,8 @@ inline State::ID toState(const QString &input) {
     return State::Probe;
   if (input.contains("download"))
     return State::Download;
+  if (input.contains("prepare_local_install"))
+    return State::PrepareLocalInstall;
   if (input.contains("install"))
     return State::Install;
   if (input.contains("reboot"))

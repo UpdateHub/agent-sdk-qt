@@ -16,6 +16,12 @@ void downloadCallback(Handler *handler) {
   handler->cancel();
 }
 
+void prepareLocalInstallCallback(Handler *handler) {
+  qInfo("function called when starting the PrepareLocalInstall state");
+
+  handler->proceed();
+}
+
 void installCallback(Handler *handler) {
   qInfo("function called when starting the Install state");
 
@@ -35,6 +41,7 @@ int main(int argc, char *argv[]) {
   StateChange listener;
 
   listener.onState(State::Download, downloadCallback);
+  listener.onState(State::PrepareLocalInstall, prepareLocalInstallCallback);
   listener.onState(State::Install, installCallback);
   listener.onState(State::Reboot, rebootCallback);
 

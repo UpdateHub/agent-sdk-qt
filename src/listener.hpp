@@ -50,6 +50,8 @@ inline const QString toQString(State::ID state) {
     return QString("probe");
   case State::Download:
     return QString("download");
+  case State::PrepareLocalInstall:
+    return QString("prepare_local_install");
   case State::Install:
     return QString("install");
   case State::Reboot:
